@@ -41,15 +41,22 @@ export default merge(baseConfig, {
 
   target: 'electron-renderer',
 
-  entry: [
-    'core-js',
-    'regenerator-runtime/runtime',
-    require.resolve('../../src/index.tsx'),
-  ],
+  entry: {
+    index: [
+      'core-js',
+      'regenerator-runtime/runtime',
+      require.resolve('../../src/index.tsx'),
+    ],
+    overlay: [
+      'core-js',
+      'regenerator-runtime/runtime',
+      require.resolve('../../src/OverlayImage/index.tsx'),
+    ],
+  },
 
   output: {
     publicPath: `http://localhost:${port}/dist/`,
-    filename: 'renderer.dev.js',
+    filename: '[name].dev.bundle.js',
   },
 
   module: {
