@@ -12,15 +12,28 @@ export default function OverlaySettings() {
     ipcRenderer.send('show-overlay');
   };
 
+  const handleHideOverlay = () => {
+    ipcRenderer.send('hide-overlay');
+  };
+
   return (
     <div>
       <Link to="/">Home</Link>
       <br />
       <h2>Overlay settings</h2>
       <br />
-      <button type="button" onClick={handleShowOverlay}>
-        Show Overlay
-      </button>
+      <div className="buttonWrapper">
+        <button
+          className="overlayBtn"
+          type="button"
+          onClick={handleShowOverlay}
+        >
+          Show Overlay Window(s)
+        </button>
+        <button type="button" onClick={handleHideOverlay}>
+          Hide Overlay Window(s)
+        </button>
+      </div>
       <br />
       <div>
         <h3>Opacity</h3>
