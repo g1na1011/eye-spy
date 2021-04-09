@@ -1,15 +1,21 @@
-import React, { useState } from 'react';
+import React, { SyntheticEvent, useState } from 'react';
 import { Link } from 'react-router-dom';
+import { ipcRenderer } from 'electron';
 
 import figmaExportImage from '../assets/images/figmaExport.png';
 import figmaFrameImage from '../assets/images/figmaFrame.png';
 
 const Home = () => {
-  const [images, setImages] = useState([]);
+  const [images, setImages] = useState([] as File[]);
 
-  const onChange = async (e: any) => {
-    const files: any = Array.from(e.target.files);
+  const onChange = async (event: SyntheticEvent) => {
+    const target = event.target as HTMLInputElement;
+    const files: File[] = Array.from(target.files as FileList);
     setImages(files);
+  };
+
+  const createOverlay = (imageAlt: string, imagePath: string) => {
+    ipcRenderer.send('set-overlay-image', imageAlt, imagePath);
   };
 
   return (
@@ -54,11 +60,22 @@ const Home = () => {
         onChange={onChange}
         type="file"
       />
-      {images.map((image: any) => (
-        <img key={image.name} src={image.path} alt={image.name} />
-      ))}
-
-      <Link to="/settings">Go to overlay settings</Link>
+      <div className="fileSection">
+        {images.map((image: File) => (
+          <span className="overlayUpload" key={image.name}>
+            <img className="overlayPreview" src={image.path} alt={image.name} />
+            <Link to="/settings">
+              <button
+                className="createOverlay"
+                onClick={() => createOverlay(image.name, image.path)}
+                type="button"
+              >
+                Create overlay!
+              </button>
+            </Link>
+          </span>
+        ))}
+      </div>
     </div>
   );
 };

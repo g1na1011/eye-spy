@@ -25,7 +25,7 @@ export default class AppUpdater {
 }
 
 let mainWindow: BrowserWindow | null = null;
-const overlayWindows: Array<BrowserWindow> | Array<any> = [];
+const overlayWindows: Array<BrowserWindow> = [];
 
 if (process.env.NODE_ENV === 'production') {
   const sourceMapSupport = require('source-map-support');
@@ -94,7 +94,7 @@ const createWindow = async () => {
 
   mainWindow.loadURL(`file://${__dirname}/index.html`);
   overlayWindows.forEach((window: BrowserWindow) =>
-    window.loadURL(`file://${__dirname}/overlay.html`)
+    window.loadURL(`file://${__dirname}/OverlayImage/index.html`)
   );
 
   // @TODO: Use 'ready-to-show' event
@@ -112,7 +112,7 @@ const createWindow = async () => {
 
   ipcMain.on('set-opacity', (event, opacity: number) => {
     event.preventDefault();
-    overlayWindows.forEach((window) => {
+    overlayWindows.forEach((window: BrowserWindow) => {
       if (!window) {
         throw new Error('"overlayWindow" is not defined');
       } else {
@@ -124,16 +124,27 @@ const createWindow = async () => {
   });
 
   ipcMain.on('show-overlay', () => {
-    overlayWindows.forEach((window) => {
+    overlayWindows.forEach((window: BrowserWindow) => {
       window?.show();
     });
   });
 
   ipcMain.on('hide-overlay', () => {
-    overlayWindows.forEach((window) => {
+    overlayWindows.forEach((window: BrowserWindow) => {
       window?.hide();
     });
   });
+
+  ipcMain.on(
+    'set-overlay-image',
+    (event, imageAlt: string, imagePath: string) => {
+      event.preventDefault();
+      overlayWindows.forEach((window: BrowserWindow) => {
+        window?.show();
+        window?.webContents.send('image', imageAlt, imagePath);
+      });
+    }
+  );
 
   mainWindow.on('closed', () => {
     mainWindow = null;
