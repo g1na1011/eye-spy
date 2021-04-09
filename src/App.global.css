@@ -12,11 +12,16 @@ body {
     #dd5789 51.77%,
     #7a2c9e 129.35%
   );
-  font-family: sans-serif;
+  font-family: 'Source Serif Pro', serif;
   overflow-y: hidden;
   display: flex;
   justify-content: center;
   align-items: center;
+}
+
+#root {
+  height: 100vh;
+  width: 100vh;
 }
 
 button {
@@ -36,10 +41,6 @@ button:hover {
   transform: scale(1.05);
 }
 
-li {
-  list-style: none;
-}
-
 a {
   text-decoration: none;
   height: fit-content;
@@ -52,9 +53,19 @@ a:hover {
   text-decoration: none;
 }
 
-.Hello {
+.homeTitle {
+  font-family: 'Comfortaa';
+  font-size: 40px;
+}
+
+.homeWrapper {
   display: flex;
-  justify-content: center;
-  align-items: center;
-  margin: 20px 0;
+  flex-direction: column;
+  height: 100%;
+  width: 100%;
+}
+
+.uploadInstructions,
+.uploadText {
+  margin-top: 40px;
 }

@@ -9,9 +9,26 @@ const Home = () => {
   };
 
   return (
-    <div>
+    <div className="homeWrapper">
       <div>
-        <div>upload image here:</div>
+        <h2 className="homeTitle">eye spy</h2>
+        <div className="uploadInstructions">
+          <div>how to use the tool:</div>
+          <ol>
+            <li>
+              export the selected Figma artboard in jpg or png format (upper
+              right in Figma)
+            </li>
+            <li>
+              upload the exported file below (note: multiple images will open
+              multiple windows)
+            </li>
+            <li>drag and position the window over your current work</li>
+            <li>compare work with specs</li>
+            <li>fix code as needed</li>
+          </ol>
+        </div>
+        <h3 className="uploadText">upload image(s):</h3>
         <input
           accept="image/png, image/jpeg, image/jpg"
           id="file-selector"
