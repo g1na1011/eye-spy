@@ -53,6 +53,12 @@ a:hover {
   text-decoration: none;
 }
 
+.createOverlay {
+  border-radius: 25px;
+  font-size: 16px;
+  margin: 10px 0;
+}
+
 .homeTitle {
   font-family: 'Comfortaa';
   font-size: 40px;
@@ -60,6 +66,16 @@ a:hover {
 
 .figmaImage {
   width: 34vh;
+}
+
+#file-selector {
+  margin-bottom: 24px;
+}
+
+.fileSection {
+  align-items: baseline;
+  display: flex;
+  justify-content: space-evenly;
 }
 
 .opacityBtn {
@@ -74,6 +90,16 @@ a:hover {
 
 .overlayBtn {
   margin-bottom: 10px;
+}
+
+.overlayPreview {
+  width: 50%;
+}
+
+.overlayUpload {
+  align-items: center;
+  display: flex;
+  flex-direction: column;
 }
 
 .uploadInstructions {

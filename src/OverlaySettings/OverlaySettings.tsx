@@ -1,7 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-
-const { ipcRenderer } = require('electron');
+import { ipcRenderer } from 'electron';
 
 export default function OverlaySettings() {
   const handleOpacityClick = (opacity: number) => {
