@@ -13,15 +13,10 @@ body {
     #7a2c9e 129.35%
   );
   font-family: 'Source Serif Pro', serif;
-  overflow-y: hidden;
   display: flex;
   justify-content: center;
   align-items: center;
-}
-
-#root {
-  height: 100vh;
-  width: 100vh;
+  overflow: auto;
 }
 
 button {
@@ -58,11 +53,8 @@ a:hover {
   font-size: 40px;
 }
 
-.homeWrapper {
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-  width: 100%;
+.figmaImage {
+  width: 34vh;
 }
 
 .opacityBtn {
@@ -75,7 +67,6 @@ a:hover {
   margin-right: 0px;
 }
 
-.uploadInstructions,
-.uploadText {
+.uploadInstructions {
   margin-top: 40px;
 }
