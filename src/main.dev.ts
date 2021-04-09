@@ -11,7 +11,7 @@
 import 'core-js/stable';
 import 'regenerator-runtime/runtime';
 import path from 'path';
-import { app, BrowserWindow, shell } from 'electron';
+import { app, BrowserWindow, ipcMain, shell } from 'electron';
 import { autoUpdater } from 'electron-updater';
 import log from 'electron-log';
 import MenuBuilder from './menu';
@@ -25,6 +25,7 @@ export default class AppUpdater {
 }
 
 let mainWindow: BrowserWindow | null = null;
+let overlayWindow: BrowserWindow | null = null;
 
 if (process.env.NODE_ENV === 'production') {
   const sourceMapSupport = require('source-map-support');
@@ -77,7 +78,19 @@ const createWindow = async () => {
     },
   });
 
+  overlayWindow = new BrowserWindow({
+    show: false,
+    width: 1024,
+    height: 728,
+    webPreferences: {
+      nodeIntegration: true,
+      devTools: false,
+    },
+    transparent: true,
+  });
+
   mainWindow.loadURL(`file://${__dirname}/index.html`);
+  overlayWindow.loadURL(`file://${__dirname}/overlay.html`);
 
   // @TODO: Use 'ready-to-show' event
   //        https://github.com/electron/electron/blob/master/docs/api/browser-window.md#using-ready-to-show-event
@@ -89,12 +102,31 @@ const createWindow = async () => {
       mainWindow.minimize();
     } else {
       mainWindow.show();
-      mainWindow.focus();
     }
+  });
+
+  ipcMain.on('set-opacity', (event, opacity: number) => {
+    event.preventDefault();
+    if (!overlayWindow) {
+      throw new Error('"overlayWindow" is not defined');
+    } else {
+      overlayWindow.show();
+      overlayWindow.setOpacity(opacity);
+      mainWindow?.focus();
+    }
+  });
+
+  ipcMain.on('show-overlay', () => {
+    overlayWindow?.show();
   });
 
   mainWindow.on('closed', () => {
     mainWindow = null;
+  });
+
+  overlayWindow.on('close', (event) => {
+    event.preventDefault();
+    overlayWindow?.hide();
   });
 
   const menuBuilder = new MenuBuilder(mainWindow);
