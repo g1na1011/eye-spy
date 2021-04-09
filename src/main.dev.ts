@@ -25,7 +25,7 @@ export default class AppUpdater {
 }
 
 let mainWindow: BrowserWindow | null = null;
-let overlayWindow: BrowserWindow | null = null;
+const overlayWindows: Array<BrowserWindow> | Array<any> = [];
 
 if (process.env.NODE_ENV === 'production') {
   const sourceMapSupport = require('source-map-support');
@@ -78,19 +78,24 @@ const createWindow = async () => {
     },
   });
 
-  overlayWindow = new BrowserWindow({
-    show: false,
-    width: 1024,
-    height: 728,
-    webPreferences: {
-      nodeIntegration: true,
-      devTools: false,
-    },
-    transparent: true,
-  });
+  for (let i = 0; i < 5; i += 1) {
+    const overlayWindow = new BrowserWindow({
+      show: false,
+      width: 1024,
+      height: 728,
+      webPreferences: {
+        nodeIntegration: true,
+        devTools: false,
+      },
+      transparent: true,
+    });
+    overlayWindows.push(overlayWindow);
+  }
 
   mainWindow.loadURL(`file://${__dirname}/index.html`);
-  overlayWindow.loadURL(`file://${__dirname}/overlay.html`);
+  overlayWindows.forEach((window: BrowserWindow) =>
+    window.loadURL(`file://${__dirname}/overlay.html`)
+  );
 
   // @TODO: Use 'ready-to-show' event
   //        https://github.com/electron/electron/blob/master/docs/api/browser-window.md#using-ready-to-show-event
@@ -107,26 +112,38 @@ const createWindow = async () => {
 
   ipcMain.on('set-opacity', (event, opacity: number) => {
     event.preventDefault();
-    if (!overlayWindow) {
-      throw new Error('"overlayWindow" is not defined');
-    } else {
-      overlayWindow.show();
-      overlayWindow.setOpacity(opacity);
-      mainWindow?.focus();
-    }
+    overlayWindows.forEach((window) => {
+      if (!window) {
+        throw new Error('"overlayWindow" is not defined');
+      } else {
+        window.show();
+        window.setOpacity(opacity);
+        mainWindow?.focus();
+      }
+    });
   });
 
   ipcMain.on('show-overlay', () => {
-    overlayWindow?.show();
+    overlayWindows.forEach((window) => {
+      window?.show();
+    });
+  });
+
+  ipcMain.on('hide-overlay', () => {
+    overlayWindows.forEach((window) => {
+      window?.hide();
+    });
   });
 
   mainWindow.on('closed', () => {
     mainWindow = null;
   });
 
-  overlayWindow.on('close', (event) => {
-    event.preventDefault();
-    overlayWindow?.hide();
+  overlayWindows.forEach((window) => {
+    window.on('close', (event: any) => {
+      event.preventDefault();
+      window?.hide();
+    });
   });
 
   const menuBuilder = new MenuBuilder(mainWindow);
