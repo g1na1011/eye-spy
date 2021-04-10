@@ -73,9 +73,10 @@ a:hover {
 }
 
 .fileSection {
-  align-items: baseline;
+  align-items: center;
   display: flex;
   justify-content: space-evenly;
+  margin-bottom: 32px;
 }
 
 .opacityBtn {
@@ -93,7 +94,7 @@ a:hover {
 }
 
 .overlayPreview {
-  width: 50%;
+  width: 30vh;
 }
 
 .overlayUpload {
@@ -102,6 +103,19 @@ a:hover {
   flex-direction: column;
 }
 
+.resetButton {
+  cursor: pointer;
+}
+
+#root {
+  height: 100%;
+  width: 100%;
+}
+
 .uploadInstructions {
   margin-top: 40px;
+}
+
+.wrapper {
+  margin: 40px;
 }

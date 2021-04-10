@@ -3,6 +3,10 @@ import { Link } from 'react-router-dom';
 import { ipcRenderer } from 'electron';
 
 export default function OverlaySettings() {
+  const handleHome = () => {
+    ipcRenderer.send('close-overlay-windows');
+  };
+
   const handleOpacityClick = (opacity: number) => {
     ipcRenderer.send('set-opacity', opacity);
   };
@@ -16,10 +20,12 @@ export default function OverlaySettings() {
   };
 
   return (
-    <div>
-      <Link to="/">Home</Link>
+    <div className="wrapper">
+      <Link to="/" onClick={handleHome}>
+        Home
+      </Link>
       <br />
-      <h2>Overlay settings</h2>
+      <h2>Overlay Settings</h2>
       <br />
       <div className="buttonWrapper">
         <button
