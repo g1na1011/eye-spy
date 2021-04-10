@@ -1,12 +1,21 @@
-import React, { SyntheticEvent, useState } from 'react';
+import React, { SyntheticEvent, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { ipcRenderer } from 'electron';
 
 import figmaExportImage from '../assets/images/figmaExport.png';
 import figmaFrameImage from '../assets/images/figmaFrame.png';
 
+export enum HomeScreenSize {
+  LARGE = 'large',
+  SMALL = 'small',
+}
+
 const Home = () => {
   const [images, setImages] = useState([] as File[]);
+
+  useEffect(() => {
+    ipcRenderer.send('change-window-size', HomeScreenSize.LARGE);
+  });
 
   const onChange = (event: SyntheticEvent) => {
     const target = event.target as HTMLInputElement;
@@ -28,16 +37,15 @@ const Home = () => {
     <div className="wrapper">
       <h2 className="homeTitle">eye spy</h2>
       {images.length > 0 ? (
-        <div>
+        <div className="overlayHomeSection">
           <div className="fileSection">
             {images.map((image: File) => (
-              <span className="overlayUpload" key={image.name}>
-                <img
-                  className="overlayPreview"
-                  src={image.path}
-                  alt={image.name}
-                />
-              </span>
+              <img
+                className="overlayPreview"
+                key={image.name}
+                src={image.path}
+                alt={image.name}
+              />
             ))}
           </div>
           <Link to="/settings">
@@ -46,7 +54,7 @@ const Home = () => {
               onClick={createOverlay}
               type="button"
             >
-              Create overlay!
+              {images.length > 1 ? 'Create overlays!' : 'Create overlay!'}
             </button>
           </Link>
           <span

@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { ipcRenderer } from 'electron';
+import Draggable from 'react-draggable';
 
 export default function OverlayImage() {
   const [imagePath, setImagePath] = useState('');
@@ -13,8 +14,8 @@ export default function OverlayImage() {
   });
 
   return (
-    <div>
+    <Draggable>
       <img src={imagePath} alt={imageAlt} />
-    </div>
+    </Draggable>
   );
 }
