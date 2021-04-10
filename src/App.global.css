@@ -99,14 +99,15 @@ a:hover {
   margin-right: 10px;
 }
 
-.overlayPreview {
-  width: 30vh;
-}
-
-.overlayUpload {
+.overlayHomeSection {
   align-items: center;
   display: flex;
   flex-direction: column;
+}
+
+.overlayPreview {
+  margin-right: 12px;
+  width: 30vh;
 }
 
 .resetButton {
