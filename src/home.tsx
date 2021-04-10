@@ -1,12 +1,21 @@
-import React, { SyntheticEvent, useState } from 'react';
+import React, { SyntheticEvent, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { ipcRenderer } from 'electron';
 
 import figmaExportImage from '../assets/images/figmaExport.png';
 import figmaFrameImage from '../assets/images/figmaFrame.png';
 
+export enum HomeScreenSize {
+  LARGE = 'large',
+  SMALL = 'small',
+}
+
 const Home = () => {
   const [images, setImages] = useState([] as File[]);
+
+  useEffect(() => {
+    ipcRenderer.send('change-window-size', HomeScreenSize.LARGE);
+  });
 
   const onChange = (event: SyntheticEvent) => {
     const target = event.target as HTMLInputElement;

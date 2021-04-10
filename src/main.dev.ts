@@ -15,6 +15,7 @@ import { app, BrowserWindow, ipcMain, shell } from 'electron';
 import { autoUpdater } from 'electron-updater';
 import log from 'electron-log';
 import MenuBuilder from './menu';
+import { HomeScreenSize } from './home';
 
 export default class AppUpdater {
   constructor() {
@@ -71,7 +72,7 @@ const createWindow = async () => {
   mainWindow = new BrowserWindow({
     show: false,
     width: 1024,
-    height: 728,
+    height: 800,
     icon: getAssetPath('icon.png'),
     webPreferences: {
       nodeIntegration: true,
@@ -106,13 +107,13 @@ const createWindow = async () => {
     });
   });
 
-  ipcMain.on('show-overlay', () => {
+  ipcMain.on('show-overlays', () => {
     overlayWindows.forEach((window: BrowserWindow) => {
       window?.show();
     });
   });
 
-  ipcMain.on('hide-overlay', () => {
+  ipcMain.on('hide-overlays', () => {
     overlayWindows.forEach((window: BrowserWindow) => {
       window?.hide();
     });
@@ -143,6 +144,7 @@ const createWindow = async () => {
 
       overlayWindow.once('ready-to-show', () => {
         overlayWindow.show();
+        mainWindow?.focus();
       });
     }
   );
@@ -152,6 +154,14 @@ const createWindow = async () => {
       window?.close();
     });
     overlayWindows = [];
+  });
+
+  ipcMain.on('change-window-size', (event, windowSize: HomeScreenSize) => {
+    if (windowSize === HomeScreenSize.LARGE) {
+      mainWindow?.setSize(1024, 800);
+    } else {
+      mainWindow?.setSize(800, 400);
+    }
   });
 
   mainWindow.on('closed', () => {

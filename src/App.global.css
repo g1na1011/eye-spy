@@ -36,11 +36,6 @@ button:hover {
   transform: scale(1.05);
 }
 
-.buttonWrapper {
-  display: flex;
-  flex-direction: column;
-}
-
 a {
   text-decoration: none;
   height: fit-content;
@@ -53,10 +48,20 @@ a:hover {
   text-decoration: none;
 }
 
+.backBtn {
+  border-radius: 30px;
+  font-size: 20px;
+  padding: 10px 12px;
+}
+
 .createOverlay {
   border-radius: 25px;
   font-size: 16px;
   margin: 10px 0;
+}
+
+.hideShowBtns {
+  display: flex;
 }
 
 .homeTitle {
@@ -90,7 +95,8 @@ a:hover {
 }
 
 .overlayBtn {
-  margin-bottom: 10px;
+  font-size: 16px;
+  margin-right: 10px;
 }
 
 .overlayPreview {

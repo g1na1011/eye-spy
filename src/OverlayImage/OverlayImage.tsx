@@ -15,7 +15,7 @@ export default function OverlayImage() {
 
   return (
     <Draggable>
-      <img className="draggableImage" src={imagePath} alt={imageAlt} />
+      <img src={imagePath} alt={imageAlt} />
     </Draggable>
   );
 }
