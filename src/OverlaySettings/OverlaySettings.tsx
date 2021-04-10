@@ -1,13 +1,13 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { Link } from 'react-router-dom';
 import { ipcRenderer } from 'electron';
 
-import { HomeScreenSize } from '../home';
+// import { HomeScreenSize } from '../home';
 
 export default function OverlaySettings() {
-  useEffect(() => {
-    ipcRenderer.send('change-window-size', HomeScreenSize.SMALL);
-  });
+  // useEffect(() => {
+  //   ipcRenderer.send('change-window-size', HomeScreenSize.SMALL);
+  // });
 
   const handleBackClick = async () => {
     ipcRenderer.send('close-overlay-windows');
