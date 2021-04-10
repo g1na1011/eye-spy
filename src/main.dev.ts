@@ -25,7 +25,7 @@ export default class AppUpdater {
 }
 
 let mainWindow: BrowserWindow | null = null;
-const overlayWindows: Array<BrowserWindow> = [];
+let overlayWindows: Array<BrowserWindow> = [];
 
 if (process.env.NODE_ENV === 'production') {
   const sourceMapSupport = require('source-map-support');
@@ -78,24 +78,7 @@ const createWindow = async () => {
     },
   });
 
-  for (let i = 0; i < 5; i += 1) {
-    const overlayWindow = new BrowserWindow({
-      show: false,
-      width: 1024,
-      height: 728,
-      webPreferences: {
-        nodeIntegration: true,
-        devTools: false,
-      },
-      transparent: true,
-    });
-    overlayWindows.push(overlayWindow);
-  }
-
   mainWindow.loadURL(`file://${__dirname}/index.html`);
-  overlayWindows.forEach((window: BrowserWindow) =>
-    window.loadURL(`file://${__dirname}/OverlayImage/index.html`)
-  );
 
   // @TODO: Use 'ready-to-show' event
   //        https://github.com/electron/electron/blob/master/docs/api/browser-window.md#using-ready-to-show-event
@@ -139,19 +122,44 @@ const createWindow = async () => {
     'set-overlay-image',
     (event, imageAlt: string, imagePath: string) => {
       event.preventDefault();
-      overlayWindows.forEach((window: BrowserWindow) => {
-        window?.show();
-        window?.webContents.send('image', imageAlt, imagePath);
+      const overlayWindow = new BrowserWindow({
+        show: false,
+        width: 1024,
+        height: 728,
+        webPreferences: {
+          nodeIntegration: true,
+          devTools: false,
+        },
+        transparent: true,
+      });
+
+      overlayWindows.push(overlayWindow);
+
+      overlayWindow.loadURL(`file://${__dirname}/OverlayImage/index.html`);
+
+      overlayWindow.webContents.on('did-finish-load', () => {
+        overlayWindow.webContents.send('image', imageAlt, imagePath);
+      });
+
+      overlayWindow.once('ready-to-show', () => {
+        overlayWindow.show();
       });
     }
   );
+
+  ipcMain.on('close-overlay-windows', () => {
+    overlayWindows.forEach((window) => {
+      window?.close();
+    });
+    overlayWindows = [];
+  });
 
   mainWindow.on('closed', () => {
     mainWindow = null;
   });
 
   overlayWindows.forEach((window) => {
-    window.on('close', (event: any) => {
+    window.on('close', (event: SyntheticEvent) => {
       event.preventDefault();
       window?.hide();
     });
